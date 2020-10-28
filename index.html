@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-  <head>
+  <!--suppress JSUnresolvedFunction -->
+<head>
     <meta charset="utf-8">
     <style>
       /* simple reset */
@@ -12,12 +13,34 @@
         vertical-align: baseline; 
       }
     </style>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
-
   <body>
-  <h3>Bakery Data</h3>
-  
+  <div id="viz"></div>
     <script>
+      let     margin = {top: 30, right: 30, bottom: 30, left: 30},
+              width = 960 - margin.right - margin.left,
+              height = 500 - margin.top - margin.bottom;
+
+      let svg = d3.select('#viz')
+      .append('svg')
+      .attr('width', width + margin.right + margin.left)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+      d3.csv('sales.csv', (d) => {
+        d.sales = +d.sales;
+        return d;
+      }).then((results) => {
+        console.log(results)
+      }).catch((error) => {
+        throw error;
+      });
+
+
+
+
     </script>
   </body>
 
