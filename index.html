@@ -74,10 +74,18 @@
         bar.append('rect')
             .attr('class', 'bar')
             .attr('x', d => x(d.flavors))
-            .attr('y', d => y(d.sales) )
-            .attr('width', x.bandwidth() )
-            .attr('height', d => height - y(d.sales) )
+            .attr('y', d => y(d.sales))
+            .attr('width', x.bandwidth())
+            .attr('height', d => height - y(d.sales))
             .style('fill', 'steelblue');
+
+        bar.append('text')
+            .text(d => d.sales)
+            .attr('x', d => x(d.flavors) + (x.bandwidth() / 2))
+            .attr('y', d => y(d.sales) - 5)
+            .attr('text-anchor', 'middle')
+        .style('font-family', 'sans-serif')
+        .style('font-size', 10);
     }
 
 
