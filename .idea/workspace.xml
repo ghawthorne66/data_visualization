@@ -155,7 +155,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1603825056717</updated>
-      <workItem from="1603825059019" duration="6966000" />
+      <workItem from="1603825059019" duration="9659000" />
     </task>
     <servers />
   </component>
@@ -178,5 +178,9 @@
       <screen x="0" y="23" width="1920" height="1123" />
     </state>
     <state x="448" y="395" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1920.1123@0.23.1920.1123" timestamp="1603825352713" />
+    <state x="168" y="274" width="670" height="676" key="search.everywhere.popup" timestamp="1603918780228">
+      <screen x="0" y="23" width="1920" height="1123" />
+    </state>
+    <state x="168" y="274" width="670" height="676" key="search.everywhere.popup/0.23.1920.1123@0.23.1920.1123" timestamp="1603918780228" />
   </component>
 </project>

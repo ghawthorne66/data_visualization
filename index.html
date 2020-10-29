@@ -11,10 +11,32 @@
             font-size: 100%;
             vertical-align: baseline;
         }
+
+        #slider {
+            text-align: center;
+            margin: 20px;
+            font-family: sans-serif;
+            font-size: 10px;
+            line-height: 2;
+        }
+
+        #sales-range {
+            vertical-align: bottom;
+        }
+
+        #viz {
+            width: 100%;
+            text-align: center;
+        }
     </style>
     <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
+<div id="slider">
+    <span>all</span>
+    <input type="range" id="sales-range" value="0">
+    <span>best sellers</span>
+</div>
 <div id="viz"></div>
 <script>
     let margin = {top: 30, right: 30, bottom: 150, left: 30},
@@ -40,10 +62,10 @@
         d.sales = +d.sales;
         return d;
     }).then((results) => {
-
+        let maxVal = d3.max(results, d => d.sales)
         x.domain(results.map(d => d.flavors));
 
-        y.domain([0, d3.max(results, d => d.sales)]);
+        y.domain([0, maxVal])
 
         svg.append('g')
             .call(d3.axisLeft(y));
@@ -60,32 +82,66 @@
 
         createBars(results);
 
+        let rangeSlider = document.getElementById('sales-range');
+
+        rangeSlider.min = 0;
+        rangeSlider.max = maxVal;
+
+        rangeSlider.onchange = () => {
+            let filteredData = results.filter(d => d.sales >= rangeSlider.value);
+            createBars(filteredData)
+        }
+
     }).catch((error) => {
         throw error;
     });
 
     function createBars(results) {
-        let bar = svg.selectAll('.bar-group')
-            .data(results)
-            .enter()
-            .append('g')
-            .attr('class', 'bar-group')
+        svg.selectAll('.bar-group')
+            .data(results, d => d.flavors)
+            .join(
+                enter => {
+                    let bar = enter.append('g')
+                        .attr('class', 'bar-group')
+                    .style('opacity', 1)
 
-        bar.append('rect')
-            .attr('class', 'bar')
-            .attr('x', d => x(d.flavors))
-            .attr('y', d => y(d.sales))
-            .attr('width', x.bandwidth())
-            .attr('height', d => height - y(d.sales))
-            .style('fill', 'steelblue');
+                    bar.append('rect')
+                        .attr('class', 'bar')
+                        .attr('x', d => x(d.flavors))
+                        .attr('y', d => y(0))
+                        .attr('width', x.bandwidth())
+                        .attr('height', 0)
+                        .style('fill', 'steelblue')
+                        .transition()
+                        .duration(850)
+                        .attr('y', d => y(d.sales))
+                        .attr('height', d => height - y(d.sales));
 
-        bar.append('text')
-            .text(d => d.sales)
-            .attr('x', d => x(d.flavors) + (x.bandwidth() / 2))
-            .attr('y', d => y(d.sales) - 5)
-            .attr('text-anchor', 'middle')
-        .style('font-family', 'sans-serif')
-        .style('font-size', 10);
+                    bar.append('text')
+                        .text(d => d.sales)
+                        .attr('x', d => x(d.flavors) + (x.bandwidth() / 2))
+                        .attr('y', d => y(d.sales) - 5)
+                        .attr('text-anchor', 'middle')
+                        .style('font-family', 'sans-serif')
+                        .style('font-size', 10)
+                        .style('opacity', 0)
+                        .transition()
+                        .duration(1000)
+                        .style('opacity', 1);
+                },
+                update => {
+                    update.transition()
+                    .duration(750)
+                    .style('opacity', 1)
+                },
+                exit => {
+                    exit.transition()
+                    .duration(750)
+                    .style('opacity', 0.15)
+                }
+            )
+
+
     }
 
 
